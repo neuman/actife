@@ -36,6 +36,7 @@
     var innactivityTime = 0;
     var activityTime = 0;
     var activityBuffer = [false, false, false, false, false, false, false, false, false, false];
+    var appMode = "Normal";
 
     /**
      * Rotates element.
@@ -64,9 +65,9 @@
     }
 
     function isBufferActive() {
-        if(countInArray(activityBuffer, false) < 5){
+        if (countInArray(activityBuffer, false) < 5) {
             return true;
-        }else{
+        } else {
             return false;
         }
 
@@ -136,8 +137,8 @@
                 innactivityTime = 0;
             }
         }
-        if(isBufferActive() == false){
-            activityTime=0;
+        if (isBufferActive() == false) {
+            activityTime = 0;
         }
         document.getElementById("innactivity-display").innerHTML = "Innactivity :" + millisToMinutesAndSeconds(innactivityTime);
         document.getElementById("activity-display").innerHTML = "Activity :" + millisToMinutesAndSeconds(activityTime);
@@ -422,6 +423,28 @@
             updateTime();
         }, 1000);
     }
+
+    function activateMode(mode){
+        if(mode == "Ambient"){
+            document.getElementById("normal-display").style.display = "none";
+            document.getElementById("ambient-display").style.display = "initial";
+        }else{
+            document.getElementById("normal-display").style.display = "initial";
+            document.getElementById("ambient-display").style.display = "none";
+        }
+    }
+
+    document.addEventListener('ambientmodechanged', function(ev) {
+        var mode = ev.detail.ambientMode;
+        if (mode == true) {
+            /* Change the UI for ambient mode */
+            activateMode("Ambient");
+        } else {
+            activateMode("Normal");
+        }
+    });
+
+    activateMode("Normal");
 
     window.onload = init;
 }());
